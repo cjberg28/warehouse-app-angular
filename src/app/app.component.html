@@ -1,13 +1,60 @@
 <div id="main-background-image">
-    <div id="background-box">
-        <p style="text-align: center;">This is the page everything will be displayed on. (PORT 4200)</p>
-        <button class="solid" type="button" pButton label="Sample Button"></button>
-        <p-button label="2nd Button"></p-button>
-
+    <div id="title-box">
+        <div style="text-align: center; margin: auto; font-size: 32px;"><strong>StormChaser Outdoor Company Warehouse Management System</strong></div>
+        <p-button label="Find Item" style="margin: 5px;" (onClick)="changeRequestType('GET')"></p-button>
+        <p-button label="Add Item" style="margin: 5px;"></p-button>
+        <p-button label="Update Item" style="margin: 5px;"></p-button>
+        <p-button label="Delete Item" style="margin: 5px;"></p-button>
     </div>
-    
+    <br>
+    <div id="item-container">
+        <div id="background-box">
+            <div id="form-container">
+                <p style="text-align: center;"><strong style="font-size: 24px;">Manage Inventory</strong></p>
+
+                <div>
+                    Slot ID:
+                    <input type="text"/>
+                </div>
+                <div>
+                    Space Required:
+                    <input type="text"/>
+                </div>
+                <div>
+                    Description:
+                    <input type="text"/>
+                </div>
+                <div>
+                    Type:
+                    <select id="type-dropdown">
+                        <option value="EQUIPMENT">Equipment</option>
+                        <option value="MEDICAL">Medical</option>
+                        <option value="FOOD">Food</option>
+                        <option value="KITCHEN">Kitchen</option>
+                        <option value="SHELTER">Shelter</option>
+                        <option value="CLOTHING">Clothing</option>
+                        <option value="FOOTWEAR">Footwear</option>
+                        <option value="LEISURE">Leisure</option>
+                        <option value="STORAGE">Storage</option>
+                        <option value="MISC">Misc</option>
+                    </select>
+                </div>
+                <p-button label="Send Request" style="margin: 5px;" (onClick)="processRequest()"></p-button>
+            </div>
+        </div>
+        <div id="results-container">
+            <!-- Append child card components in DOM Manipulation here. -->
+            <warehouse-object-component></warehouse-object-component>
+            <warehouse-object-component></warehouse-object-component>
+            <warehouse-object-component></warehouse-object-component>
+            <warehouse-object-component></warehouse-object-component>
+            <warehouse-object-component></warehouse-object-component>
+            <warehouse-object-component></warehouse-object-component>
+            <warehouse-object-component></warehouse-object-component>
 
 
+        </div>
+    </div>
 </div>
 
 <router-outlet></router-outlet>

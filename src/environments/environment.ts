@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  getRequestURL: "https://localhost:8080/warehouse-project-berg/find/",
+  postRequestURL: "https://localhost:8080/warehouse-project-berg/add/",
+  putRequestURL: "https://localhost:8080/warehouse-project-berg/update/",
+  deleteRequestURL: "https://localhost:8080/warehouse-project-berg/delete/",
 };
 
 /*
