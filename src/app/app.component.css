@@ -22,6 +22,11 @@
     background-color: rgba(19, 173, 13, 1);
     height: 50px;
     display: flex;
+    padding: 5px;
+}
+
+p-button + p-button {
+    margin-left: 5px;
 }
 
 #item-container {
@@ -36,6 +41,16 @@
 }
 
 #results-container {
+    display: flex;
     flex-flow: row wrap; /* Place items like a row, and wrap to next line if necessary. */
-    align-content: flex-start;
+    justify-content: flex-start;
+    padding: 5px;
+    overflow: auto;
+    max-height: 659px; /* Hardcoded for now, but want to make it variable to the bottom of the screen, depending on screen size. */
 }
+
+warehouse-object-component + warehouse-object-component {
+    margin-left: 5px;
+}
+
+/* No need to do anything like warehouse-object-component + json-result-message-component because the JSON result message will appear alone always. */

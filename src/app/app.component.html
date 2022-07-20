@@ -1,10 +1,10 @@
 <div id="main-background-image">
     <div id="title-box">
         <div style="text-align: center; margin: auto; font-size: 32px;"><strong>StormChaser Outdoor Company Warehouse Management System</strong></div>
-        <p-button label="Find Item" style="margin: 5px;" (onClick)="changeRequestType('GET')"></p-button>
-        <p-button label="Add Item" style="margin: 5px;"></p-button>
-        <p-button label="Update Item" style="margin: 5px;"></p-button>
-        <p-button label="Delete Item" style="margin: 5px;"></p-button>
+        <p-button label="Find Item" (onClick)="changeRequestType('GET')" id="find-button"></p-button>
+        <p-button label="Add Item" (onClick)="changeRequestType('POST')" id="add-button"></p-button> <!-- Need to add some padding/margin in styling here, but it gives errors? -->
+        <p-button label="Update Item" (onClick)="changeRequestType('PUT')" id="update-button"></p-button>
+        <p-button label="Delete Item" (onClick)="changeRequestType('DELETE')" id="delete-button"></p-button>
     </div>
     <br>
     <div id="item-container">
@@ -14,19 +14,19 @@
 
                 <div>
                     Slot ID:
-                    <input type="text"/>
+                    <input id="slot-id-input" type="text"/>
                 </div>
                 <div>
                     Space Required:
-                    <input type="text"/>
+                    <input id="space-required-input" type="text"/>
                 </div>
                 <div>
                     Description:
-                    <input type="text"/>
+                    <input id="description-input" type="text"/>
                 </div>
-                <div>
+                <div style="padding: 5px;">
                     Type:
-                    <select id="type-dropdown">
+                    <select id="type-dropdown-input">
                         <option value="EQUIPMENT">Equipment</option>
                         <option value="MEDICAL">Medical</option>
                         <option value="FOOD">Food</option>
@@ -39,20 +39,11 @@
                         <option value="MISC">Misc</option>
                     </select>
                 </div>
-                <p-button label="Send Request" style="margin: 5px;" (onClick)="processRequest()"></p-button>
+                <p-button label="Send Request" (onClick)="processRequest()" id="send-button"></p-button>
             </div>
         </div>
         <div id="results-container">
             <!-- Append child card components in DOM Manipulation here. -->
-            <warehouse-object-component></warehouse-object-component>
-            <warehouse-object-component></warehouse-object-component>
-            <warehouse-object-component></warehouse-object-component>
-            <warehouse-object-component></warehouse-object-component>
-            <warehouse-object-component></warehouse-object-component>
-            <warehouse-object-component></warehouse-object-component>
-            <warehouse-object-component></warehouse-object-component>
-
-
         </div>
     </div>
 </div>

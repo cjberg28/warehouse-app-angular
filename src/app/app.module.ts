@@ -8,11 +8,14 @@ import {ButtonModule} from 'primeng/button';
 import {DropdownModule} from 'primeng/dropdown';
 import { WarehouseObjectComponent } from './warehouse-object/warehouse-object.component';
 import {CardModule} from 'primeng/card';
+import { HttpClientModule } from '@angular/common/http';
+import { JsonResultMessageComponent } from './json-result-message/json-result-message.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WarehouseObjectComponent
+    WarehouseObjectComponent,
+    JsonResultMessageComponent
   ],
   imports: [
     //Add all PrimeNG modules here so they can be used in your application!!
@@ -20,7 +23,8 @@ import {CardModule} from 'primeng/card';
     AppRoutingModule,
     ButtonModule,
     DropdownModule,
-    CardModule
+    CardModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

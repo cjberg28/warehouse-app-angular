@@ -11,4 +11,5 @@ export class WarehouseObject {
         this.description = description;
         this.type = type;
     }
+
 }
