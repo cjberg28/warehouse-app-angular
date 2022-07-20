@@ -125,11 +125,18 @@ export class AppComponent {
           this.jsonResults = [this.jsonResult];
         });
         break;
-      case 'DELETE':
-        //this.removeAllChildren(this.resultsContainer);//Clear children from previous request.
+      case 'DELETE'://WORKS!!
+        let id :number = parseInt(this.slotIDInputText);
 
-
-
+        if (id != NaN) {//Valid ID given.
+          this.warehouseAPIService.delete(parseInt(this.slotIDInputText)).subscribe(data => {
+            this.jsonResult = data;
+            this.jsonResults = [this.jsonResult];
+          });
+        } else {//For some reason, this code never fires. Strange.
+          this.jsonResult = new JSONResultMessage("The object you are trying to delete does not exist in the database, or an invalid Slot ID was entered. Please try again.");
+        }
+        this.clearInputFields();
         break;
       default://WORKS!!
         this.requestType = "";
