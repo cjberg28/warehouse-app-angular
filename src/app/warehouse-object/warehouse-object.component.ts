@@ -1,5 +1,5 @@
 import { NumberSymbol } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { WarehouseObject } from '../models/WarehouseObject';
 import { WarehouseApiService } from '../warehouse-api.service';
 
@@ -10,7 +10,7 @@ import { WarehouseApiService } from '../warehouse-api.service';
 })
 export class WarehouseObjectComponent implements OnInit {
 
-  warehouseObject :WarehouseObject = new WarehouseObject(-1,0,"",""); /* Default replacement for a null value. */
+  @Input() warehouseObject :WarehouseObject = new WarehouseObject(-1,0,"",""); /* Default replacement for a null value. */
   warehouseAPIService :WarehouseApiService;
 
   constructor(warehouseAPIService :WarehouseApiService) { 

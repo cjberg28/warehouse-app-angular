@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { WarehouseApiService } from './warehouse-api.service';
 import { DOCUMENT } from '@angular/common';
 import { WarehouseObject } from './models/WarehouseObject';
-import { WarehouseObjectComponent } from './warehouse-object/warehouse-object.component';
+import { JSONResultMessage } from './models/JSONResultMessage';
 
 @Component({
   selector: 'app-root',
@@ -15,91 +15,126 @@ export class AppComponent {
   requestType :string = "";
   warehouseAPIService :WarehouseApiService;
 
-  document :Document;
-  findButton :HTMLElement | null;
-  addButton :HTMLElement | null;
-  updateButton :HTMLElement | null;
-  deleteButton :HTMLElement | null;
-  sendButton :HTMLElement | null;
-  slotIDInputText :HTMLInputElement;
-  spaceRequiredInputText :HTMLInputElement;
-  descriptionInputText :HTMLInputElement;
-  typeInputDropdown :HTMLInputElement;
+  private document :Document;
+  slotIDInputText :string;
+  spaceRequiredInputText :string;
+  descriptionInputText :string;
+  typeInputDropdown :string;
+  warehouseObjects :Array<WarehouseObject> = [];//Default empty. Will be changed dynamically.
+  warehouseObject :WarehouseObject = new WarehouseObject(0,0,"","MISC");//Default
+  jsonResults :Array<JSONResultMessage> = [];//Default empty.
+  jsonResult :JSONResultMessage = new JSONResultMessage("");//Default
 
-  constructor(warehouseAPIService :WarehouseApiService, @Inject(DOCUMENT) document :Document) {
+  constructor(warehouseAPIService :WarehouseApiService, @Inject(DOCUMENT) private d :Document) {
     /* Get the API Service instance to be able to make HTTP requests. Inject the document to gain access to DOM manipulation.*/
     this.warehouseAPIService = warehouseAPIService;
-    this.document = document;
-    /* Get references to all major input HTML elements on the page to dynamically clear them when buttons are pressed. */
-    this.findButton = this.document.getElementById("find-button");
-    this.addButton = this.document.getElementById("add-button");
-    this.updateButton = this.document.getElementById("update-button");
-    this.deleteButton = this.document.getElementById("delete-button");
-    this.sendButton = this.document.getElementById("send-button");
-    this.slotIDInputText = this.document.getElementById("slot-id-input") as HTMLInputElement;
-    this.spaceRequiredInputText = this.document.getElementById("space-required-input") as HTMLInputElement;
-    this.descriptionInputText = this.document.getElementById("description-input") as HTMLInputElement;
-    this.typeInputDropdown = this.document.getElementById("type-dropdown-input") as HTMLInputElement;//This may not be correct, as it is a dropdown.
+    this.document = d;
+    console.log("Document: " + this.document);
+    this.slotIDInputText = "";
+    this.spaceRequiredInputText = "";
+    this.descriptionInputText = "";
+    this.typeInputDropdown = "";
+    
   }
 
   /* Function called by pressing the "Send Request" button. */
   processRequest() {
+    this.jsonResults = [];
+    this.warehouseObjects = [];//Clears the notices from the previous query.
     switch (this.requestType) {
-      case 'GET':
+      case 'GET'://WORKS!!
         //Check first if slotId has an entry. If so, prioritize it over type.
-        let warehouseObjects :Array<WarehouseObject>;
-        let warehouseObject :WarehouseObject;//Can use this in later cases without needing to re-declare.
 
-        if (this.slotIDInputText.value != "") {//User entered a slotId.
+        if (this.slotIDInputText != "") {//User entered a slotId.
 
-          //TODO: Maybe add if slotId = all?
-
-          let id :number = parseInt(this.slotIDInputText.value);//Could return NaN if not parseable.
-          if (id != NaN && id > 0) {//Valid slotId. Edge case: Float?
-            //Valid slotId returns a single object. Non-existent slotId returns null.
-            this.warehouseAPIService.findBySlotId(id).subscribe(data => {
-              warehouseObject = data;
-              if (warehouseObject != null) {
-                //Use document.createElement() and document.appendChild() to create a new WarehouseObjectComponent and add it to the results container.
-              } else {
-                //Use document.createElement() and document.appendChild() to create a new JSONResultMessageComponent and add it to the results container.
-              }
-              
+          if (this.slotIDInputText.toUpperCase() == "ALL") {
+            this.warehouseAPIService.findAll().subscribe(data => {
+              this.warehouseObjects = data;//Send array of warehouse objects to be used in ngFor component creation
             });
-          } else {//Try searching by type.
-            //TODO
+          }
 
+          else {
+            let id :number = parseInt(this.slotIDInputText);//Could return NaN if not parseable.
+            if (id != NaN && id > 0) {//Valid slotId. Edge case: Float?
+              //Valid slotId returns a single object. Non-existent slotId returns null.
+              this.warehouseAPIService.findBySlotId(id).subscribe(data => {
+                this.warehouseObject = data;
+                if (this.warehouseObject != null) {
+                  this.warehouseObjects = [this.warehouseObject];//Send array to ngFor
+                } else {//Item does not exist.
+                  this.jsonResult = new JSONResultMessage("The object with the provided Slot ID does not exist in the database.");
+                  this.jsonResults = [this.jsonResult];//Send array to ngFor
+                }
+              });
+            }
+            
+            else {//Invalid slotId - Not a number or nonpositive slotId.
+              this.jsonResult = new JSONResultMessage("Invalid Slot ID entered. Please leave the field blank if searching by Type.");
+              this.jsonResults = [this.jsonResult];
+            }
           }
         }
+
+        else {//slotId search failed. Try searching by type. This field will never be empty (dropdown).
+          this.warehouseAPIService.findAllOfType(this.typeInputDropdown).subscribe(data => {
+            if (data != null || data != []) {
+              this.warehouseObjects = data;//Send array to ngFor
+            } else {//No objects of that type exist.
+              this.jsonResult = new JSONResultMessage("No objects with the given Type exist in the database.");
+              this.jsonResults = [this.jsonResult];
+            }
+          })
+        }
+        this.clearInputFields();
         break;
       case 'POST':
         //Assign each input field to a WarehouseObject field, then call a POST request with that object. 0 for slotId because DAO method doesn't use it and it will be assigned.
-        warehouseObject = new WarehouseObject(0,parseFloat(this.spaceRequiredInputText.value),this.descriptionInputText.value,this.typeInputDropdown.value);
+        //Could give NaN for parseFloat().
+        this.warehouseObject = new WarehouseObject(0,parseFloat(this.spaceRequiredInputText),this.descriptionInputText,this.typeInputDropdown);
+
         this.clearInputFields();
-        this.warehouseAPIService.save(warehouseObject).subscribe(data => {
+        this.warehouseAPIService.save(this.warehouseObject).subscribe(data => {
           //Function to process the returned warehouse object. It will have a new slotId.
           //Case 1: Updated WarehouseObject
           //Case 2: JSONResultMessage
-          try {
-            warehouseObject = data;//Case 1
-            //Use document.createElement() and document.appendChild() to create a new WarehouseObjectComponent and add it to the results container.
-            let wareObjComp :HTMLElement = this.document.createElement("warehouse-object-component");
-            let wareObjCompTS :WarehouseObjectComponent = wareObjComp as WarehouseObjectComponent;
-            wareObjComp.setWarehouseObject
 
 
-            let warehouseObjectComponent :WarehouseObjectComponent = new WarehouseObjectComponent(this.warehouseAPIService);
-            warehouseObjectComponent.setWarehouseObject(warehouseObject);
-            this.document.getElementById("results-container")?.appendChild(warehouseObjectComponent);
+
+          //TODO
+          try {//Case 1
+            this.warehouseObject = data;
+            this.jsonResult = data;
+            try {//Check if I can access a message property from warehouseObject. If yes, problem.
+              this.warehouseObject.slotId;
+            } catch (e) {
+
+            }
+            this.warehouseObjects = [this.warehouseObject];
           } catch (e) {//Case 2
-            //Use document.createElement() and document.appendChild() to create a new JSONResultMessageComponent and add it to the results container.
-            //TODO
+            this.jsonResult = data;
+            this.jsonResults = [this.jsonResult];
           }
         });
         break;
-      default:
+      case 'PUT'://WORKS!!
+        //PUT only gives JSONResultMessage's back.
+        this.warehouseObject = new WarehouseObject(parseInt(this.slotIDInputText),parseFloat(this.spaceRequiredInputText),this.descriptionInputText,this.typeInputDropdown);
+        this.clearInputFields();
+        this.warehouseAPIService.update(this.warehouseObject).subscribe(data => {
+          this.jsonResult = data;
+          this.jsonResults = [this.jsonResult];
+        });
+        break;
+      case 'DELETE':
+        //this.removeAllChildren(this.resultsContainer);//Clear children from previous request.
+
+
+
+        break;
+      default://WORKS!!
         this.requestType = "";
-        throw new TypeError("Invalid request type.");
+        this.jsonResult = new JSONResultMessage("Please select a request type from the buttons at the top of the screen.");
+        this.jsonResults = [this.jsonResult];
     }
   }
 
@@ -108,10 +143,19 @@ export class AppComponent {
     this.requestType = request;
   }
 
+  //This will never work because the objects keep returning as null.
   clearInputFields() {
-    this.slotIDInputText.value = "";
-    this.spaceRequiredInputText.value = "";
-    this.descriptionInputText.value = "";
-    this.typeInputDropdown.value = "EQUIPMENT";//First value.
+    this.slotIDInputText = "";
+    this.spaceRequiredInputText = "";
+    this.descriptionInputText = "";
+    this.typeInputDropdown = "";
+  }
+
+  //This function takes in a Node and removes its children.
+  //Used to remove all dynamically-created cards in my results-container.
+  removeAllChildren(parent :Node) {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
   }
 }

@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  getRequestURL: "https://localhost:8080/warehouse-project-berg/find/",
-  postRequestURL: "https://localhost:8080/warehouse-project-berg/add/",
-  putRequestURL: "https://localhost:8080/warehouse-project-berg/update/",
-  deleteRequestURL: "https://localhost:8080/warehouse-project-berg/delete/",
+  getRequestURL: "http://localhost:8080/warehouse-project-berg/find/",
+  postRequestURL: "http://localhost:8080/warehouse-project-berg/add/",
+  putRequestURL: "http://localhost:8080/warehouse-project-berg/update/",
+  deleteRequestURL: "http://localhost:8080/warehouse-project-berg/delete/",
 };
 
 /*

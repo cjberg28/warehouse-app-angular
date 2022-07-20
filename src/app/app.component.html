@@ -14,19 +14,19 @@
 
                 <div>
                     Slot ID:
-                    <input id="slot-id-input" type="text"/>
+                    <input id="slot-id-input" type="text" [(ngModel)] = "slotIDInputText"/>
                 </div>
                 <div>
                     Space Required:
-                    <input id="space-required-input" type="text"/>
+                    <input id="space-required-input" type="text" [(ngModel)] = "spaceRequiredInputText"/>
                 </div>
                 <div>
                     Description:
-                    <input id="description-input" type="text"/>
+                    <input id="description-input" type="text" [(ngModel)] = "descriptionInputText"/>
                 </div>
                 <div style="padding: 5px;">
                     Type:
-                    <select id="type-dropdown-input">
+                    <select id="type-dropdown-input" [(ngModel)] = "typeInputDropdown">
                         <option value="EQUIPMENT">Equipment</option>
                         <option value="MEDICAL">Medical</option>
                         <option value="FOOD">Food</option>
@@ -44,8 +44,12 @@
         </div>
         <div id="results-container">
             <!-- Append child card components in DOM Manipulation here. -->
+            <div *ngFor="let wObj of warehouseObjects">
+                <warehouse-object-component [warehouseObject]="wObj"></warehouse-object-component>
+            </div>
+            <div *ngFor="let message of jsonResults">
+                <json-result-message-component [jsonResultMessage]="message"></json-result-message-component>
+            </div>
         </div>
     </div>
-</div>
-
-<router-outlet></router-outlet>
+  </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { JSONResultMessage } from '../models/JSONResultMessage';
 import { WarehouseApiService } from '../warehouse-api.service';
 
@@ -9,7 +9,7 @@ import { WarehouseApiService } from '../warehouse-api.service';
 })
 export class JsonResultMessageComponent implements OnInit {
 
-  jsonResultMessage :JSONResultMessage = new JSONResultMessage("");//Default message.
+  @Input() jsonResultMessage :JSONResultMessage = new JSONResultMessage("");//Default message.
   warehouseAPIService :WarehouseApiService;
 
   //Dependency injection.
