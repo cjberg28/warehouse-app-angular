@@ -1,5 +1,6 @@
 <div id="main-background-image">
     <div id="title-box">
+        <!-- Title and buttons -->
         <div style="text-align: center; margin: auto; font-size: 32px;"><strong>StormChaser Outdoor Company Warehouse Management System</strong></div>
         <p-button label="Find Item" (onClick)="changeRequestType('GET')" id="find-button"></p-button>
         <p-button label="Add Item" (onClick)="changeRequestType('POST')" id="add-button"></p-button> <!-- Need to add some padding/margin in styling here, but it gives errors? -->
@@ -11,7 +12,7 @@
         <div id="background-box">
             <div id="form-container">
                 <p style="text-align: center;"><strong style="font-size: 24px;">Manage Inventory</strong></p>
-
+                <!-- Text inputs -->
                 <div>
                     Slot ID:
                     <input id="slot-id-input" type="text" pInputText [(ngModel)] = "slotIDInputText"/>
@@ -25,6 +26,7 @@
                     <input id="description-input" type="text" pInputText [(ngModel)] = "descriptionInputText"/>
                 </div>
                 <div style="padding: 5px;">
+                    <!-- Dropdown element -->
                     Type:
                     <select id="type-dropdown-input" [(ngModel)] = "typeInputDropdown">
                         <option value="EQUIPMENT">Equipment</option>

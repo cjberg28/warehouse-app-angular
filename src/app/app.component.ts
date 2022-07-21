@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { WarehouseApiService } from './warehouse-api.service';
-import { DOCUMENT } from '@angular/common';
 import { WarehouseObject } from './models/WarehouseObject';
 import { JSONResultMessage } from './models/JSONResultMessage';
 
@@ -15,7 +14,6 @@ export class AppComponent {
   requestType :string = "";
   warehouseAPIService :WarehouseApiService;
 
-  private document :Document;
   slotIDInputText :string;
   spaceRequiredInputText :string;
   descriptionInputText :string;
@@ -25,11 +23,9 @@ export class AppComponent {
   jsonResults :Array<JSONResultMessage> = [];//Default empty.
   jsonResult :JSONResultMessage = new JSONResultMessage("");//Default
 
-  constructor(warehouseAPIService :WarehouseApiService, @Inject(DOCUMENT) private d :Document) {
+  constructor(warehouseAPIService :WarehouseApiService) {
     /* Get the API Service instance to be able to make HTTP requests. Inject the document to gain access to DOM manipulation.*/
     this.warehouseAPIService = warehouseAPIService;
-    this.document = d;
-    console.log("Document: " + this.document);
     this.slotIDInputText = "";
     this.spaceRequiredInputText = "";
     this.descriptionInputText = "";
@@ -37,7 +33,7 @@ export class AppComponent {
     
   }
 
-  /* Function called by pressing the "Send Request" button. */
+  /* Function called by pressing the "Send Request" button. It determines the request type, then sends the appropriate request and displays the results.*/
   processRequest() {
     this.jsonResults = [];
     this.warehouseObjects = [];//Clears the notices from the previous query.
@@ -143,24 +139,16 @@ export class AppComponent {
     }
   }
 
-  /* Function called by pressing the menu buttons. */
+  /* Function called by pressing the menu buttons. Changes request to GET/POST/PUT/UPDATE.*/
   changeRequestType(request :string) {
     this.requestType = request;
   }
 
-  //This will never work because the objects keep returning as null.
+  //Clears the input fields.
   clearInputFields() {
     this.slotIDInputText = "";
     this.spaceRequiredInputText = "";
     this.descriptionInputText = "";
     this.typeInputDropdown = "";
-  }
-
-  //This function takes in a Node and removes its children.
-  //Used to remove all dynamically-created cards in my results-container.
-  removeAllChildren(parent :Node) {
-    while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
-    }
   }
 }
