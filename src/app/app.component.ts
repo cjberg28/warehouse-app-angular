@@ -77,7 +77,7 @@ export class AppComponent {
 
         else {//slotId search failed. Try searching by type. This field will never be empty (dropdown).
           this.warehouseAPIService.findAllOfType(this.typeInputDropdown).subscribe(data => {
-            if (data != null || data != []) {
+            if (data != null && data != "") {
               this.warehouseObjects = data;//Send array to ngFor
             } else {//No objects of that type exist.
               this.jsonResult = new JSONResultMessage("No objects with the given Type exist in the database.");

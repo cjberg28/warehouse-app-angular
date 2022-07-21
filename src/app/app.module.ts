@@ -11,6 +11,7 @@ import {CardModule} from 'primeng/card';
 import { HttpClientModule } from '@angular/common/http';
 import { JsonResultMessageComponent } from './json-result-message/json-result-message.component';
 import { FormsModule } from '@angular/forms';
+import {InputTextModule} from 'primeng/inputtext';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     DropdownModule,
     CardModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    InputTextModule
   ],
   providers: [],
   bootstrap: [AppComponent]

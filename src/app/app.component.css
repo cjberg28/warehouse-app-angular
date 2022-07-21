@@ -46,11 +46,11 @@ p-button + p-button {
     justify-content: flex-start;
     padding: 5px;
     overflow: auto;
-    max-height: 659px; /* Hardcoded for now, but want to make it variable to the bottom of the screen, depending on screen size. */
+    max-height: 600px; /* Hardcoded for now, but want to make it variable to the bottom of the screen, depending on screen size. */
 }
 
 warehouse-object-component + warehouse-object-component {
-    margin-left: 5px;
+    margin-left: 5px; /*Doesn't seem to work with description text. */
 }
 
 /* No need to do anything like warehouse-object-component + json-result-message-component because the JSON result message will appear alone always. */
