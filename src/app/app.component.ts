@@ -87,34 +87,32 @@ export class AppComponent {
         }
         this.clearInputFields();
         break;
-      case 'POST':
+      case 'POST'://WORKS!!
         //Assign each input field to a WarehouseObject field, then call a POST request with that object. 0 for slotId because DAO method doesn't use it and it will be assigned.
-        //Could give NaN for parseFloat().
-        this.warehouseObject = new WarehouseObject(0,parseFloat(this.spaceRequiredInputText),this.descriptionInputText,this.typeInputDropdown);
 
-        this.clearInputFields();
-        this.warehouseAPIService.save(this.warehouseObject).subscribe(data => {
-          //Function to process the returned warehouse object. It will have a new slotId.
-          //Case 1: Updated WarehouseObject
-          //Case 2: JSONResultMessage
+        let space :number = parseFloat(this.spaceRequiredInputText);
 
+        if (space <= 0) {
+          this.jsonResult = new JSONResultMessage("Addition to warehouse failed - Space Required is 0, negative, or invalid.");
+          this.jsonResults = [this.jsonResult];
+        } else {
+          this.warehouseObject = new WarehouseObject(0,space,this.descriptionInputText,this.typeInputDropdown);
 
+          this.warehouseAPIService.save(this.warehouseObject).subscribe(data => {
+            //The doPost() servlet method is guaranteed to return one of these objects:
+            //Case 1: WarehouseObject
+            //Case 2: JSONResultMessage
 
-          //TODO
-          try {//Case 1
-            this.warehouseObject = data;
-            this.jsonResult = data;
-            try {//Check if I can access a message property from warehouseObject. If yes, problem.
-              this.warehouseObject.slotId;
-            } catch (e) {
-
+            if (data.hasOwnProperty('message')) {//If the data has a message property, it is a JSONResultMessage
+              this.jsonResult = data;
+              this.jsonResults = [this.jsonResult];
+            } else {//It is a WarehouseObject
+              this.warehouseObject = data;
+              this.warehouseObjects = [this.warehouseObject];
             }
-            this.warehouseObjects = [this.warehouseObject];
-          } catch (e) {//Case 2
-            this.jsonResult = data;
-            this.jsonResults = [this.jsonResult];
-          }
-        });
+          });
+        }
+        this.clearInputFields();
         break;
       case 'PUT'://WORKS!!
         //PUT only gives JSONResultMessage's back.
