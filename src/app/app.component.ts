@@ -40,6 +40,8 @@ export class AppComponent {
     switch (this.requestType) {
       case 'GET'://WORKS!!
         //Check first if slotId has an entry. If so, prioritize it over type.
+        
+        //Note: For some strange reason, entering nothing in either field and submitting runs findAll().
 
         if (this.slotIDInputText != "") {//User entered a slotId.
 
